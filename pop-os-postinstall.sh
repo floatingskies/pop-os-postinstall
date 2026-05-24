@@ -16,9 +16,7 @@ set -e
 ##URLS
 
 URL_GOOGLE_CHROME="https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
-URL_4K_VIDEO_DOWNLOADER="https://dl.4kdownload.com/app/4kvideodownloader_4.20.0-1_amd64.deb?source=website"
-URL_INSYNC="https://d2t3ff60b2tol4.cloudfront.net/builds/insync_3.7.2.50318-impish_amd64.deb"
-URL_SYNOLOGY_DRIVE="https://global.download.synology.com/download/Utility/SynologyDriveClient/3.0.3-12689/Ubuntu/Installer/x86_64/synology-drive-client-12689.x86_64.deb"
+URL_VSCODIUM="https://github.com/VSCodium/vscodium/releases/download/1.121.03429/codium_1.121.03429_amd64.deb"
 
 
 ##DIRETÓRIOS E ARQUIVOS
@@ -57,13 +55,6 @@ fi
 
 # ------------------------------------------------------------------------------ #
 
-
-## Removendo travas eventuais do apt ##
-travas_apt(){
-  sudo rm /var/lib/dpkg/lock-frontend
-  sudo rm /var/cache/apt/archives/lock
-}
-
 ## Adicionando/Confirmando arquitetura de 32 bits ##
 add_archi386(){
 sudo dpkg --add-architecture i386
@@ -76,23 +67,22 @@ sudo apt update -y
 ##DEB SOFTWARES TO INSTALL
 
 PROGRAMAS_PARA_INSTALAR=(
-  snapd
   winff
+  gufw
   virtualbox
   ratbagd
   gparted
   timeshift
   gufw
   synaptic
-  solaar
   vlc
   code
   gnome-sushi 
   folder-color
   git
+  git-lfs
   wget
   ubuntu-restricted-extras
-  v4l2loopback-utils
  
 )
 
@@ -106,9 +96,7 @@ echo -e "${VERDE}[INFO] - Baixando pacotes .deb${SEM_COR}"
 
 mkdir "$DIRETORIO_DOWNLOADS"
 wget -c "$URL_GOOGLE_CHROME"       -P "$DIRETORIO_DOWNLOADS"
-wget -c "$URL_4K_VIDEO_DOWNLOADER" -P "$DIRETORIO_DOWNLOADS"
-wget -c "$URL_INSYNC"              -P "$DIRETORIO_DOWNLOADS"
-wget -c "$URL_SYNOLOGY_DRIVE"      -P "$DIRETORIO_DOWNLOADS"
+wget -c "$URL_VSCODIUM"       -P "$DIRETORIO_DOWNLOADS"
 
 ## Instalando pacotes .deb baixados na sessão anterior ##
 echo -e "${VERDE}[INFO] - Instalando pacotes .deb baixados${SEM_COR}"
@@ -136,23 +124,11 @@ flatpak install flathub org.gimp.GIMP -y
 flatpak install flathub com.spotify.Client -y
 flatpak install flathub com.bitwarden.desktop -y
 flatpak install flathub org.telegram.desktop -y
-flatpak install flathub org.freedesktop.Piper -y
-flatpak install flathub org.chromium.Chromium -y
 flatpak install flathub org.gnome.Boxes -y
 flatpak install flathub org.onlyoffice.desktopeditors -y
 flatpak install flathub org.qbittorrent.qBittorrent -y
 flatpak install flathub org.flameshot.Flameshot -y
-flatpak install flathub org.electrum.electrum -y
-}
-
-## Instalando pacotes Snap ##
-
-install_snaps(){
-
-echo -e "${VERDE}[INFO] - Instalando pacotes snap${SEM_COR}"
-
-sudo snap install authy
-
+flatpak install flathub md.obsidian.Obsidian
 }
 
 
@@ -194,25 +170,22 @@ else
     touch /home/$USER/.config/gkt-3.0/bookmarks
 fi
 
-echo "file:///home/$USER/EDITAR 🔵 EDITAR" >> $FILE
+echo "file:///home/$USER/Em edição 🟡 EDITAR" >> $FILE
+echo "file:///home/$USER/Estudo 📚 ESTUDO" >> $FILE
 echo "file:///home/$USER/AppImage" >> $FILE
-echo "file:///home/$USER/Resolve 🔴 Resolve" >> $FILE
-echo "file:///home/$USER/TEMP 🕖 TEMP" >> $FILE
+echo "file:///home/$USER/KDENlive 📷 Video" >> $FILE
+echo "file:///home/$USER/Temporario 🕖 TEMP" >> $FILE
 }
 
 # -------------------------------------------------------------------------------- #
 # -------------------------------EXECUÇÃO----------------------------------------- #
 
-travas_apt
 testes_internet
-travas_apt
 apt_update
-travas_apt
 add_archi386
 just_apt_update
 install_debs
 install_flatpaks
-install_snaps
 extra_config
 apt_update
 system_clean
